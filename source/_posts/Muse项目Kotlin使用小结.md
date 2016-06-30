@@ -32,7 +32,7 @@ fun Double.Yuan(): String{
 通过这种方式，Crash率大幅降低，目前Crash中几乎没有出现过空指针的异常。
 ## Anko
 Android的UI通常是使用xml文件进行布局，虽然可以使用Java代码进行创建，但是写起来较为复杂，Kotlin的拓展库Anko提供了一种极为方便的方式供我们使用Kotlin代码进行界面的构建。
-```Kotlin:n
+```
 verticalLayout {
     padding = dip(30)
     editText {
@@ -54,7 +54,7 @@ Kotlin中的常量和Java中的final修饰的变量类似。在Kotlin中，推�
 ## Lazy-init
 我们经常会遇到Activity或者Fragment中获取intent中传递过来的参数，通常做法是在类开头处进行声明，然后在onCreate等方法中进行。
 但是这样带来的问题是当我们需要知道这个变量的来源时，我们需要翻到初始化的地方，不太方便。在Kotlin中通过懒加载的方式，可以很好的解决这个问题。如：
-```kotlin:n
+```
     val mRoomId by lazy { intent.getLongExtra(EXTRA_CHATROOM_ID, 0) }
 ```
 这样，在变量声明的地方，我们就能比较明显看到它的初始化方式。
@@ -62,7 +62,7 @@ Kotlin中的常量和Java中的final修饰的变量类似。在Kotlin中，推�
 每个客户端项目都会有一系列的称为Model或者Bean的类，用来表示我们的数据模型。通常我们需要为这些类添加Getter/Setter、equals/hashCode、toString等方法。虽然IDE可以帮助我们生成，但是这样的重复劳动确实不被讨喜。
 在Kotlin中，我们可以使用`data `关键字来修饰某个类，就可以省下上述这些方法。
 例如，声明一个User类：
-```kotlin:n
+```
 data class User(val name: String, val age: Int)
 ```
 ## Lambdas
@@ -77,7 +77,7 @@ view.setOnClickListener(new OnClickListener(){
 })
 ```
 然后，翻译成Kotlin
-```kotlin:n
+```
 view.setOnClickListener(object : OnClickListener {
     override fun onClick(v: View) {
     ...
