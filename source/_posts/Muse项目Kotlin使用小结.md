@@ -14,6 +14,12 @@ description: "总结Muse项目中使用Kotlin带来的便利"
 ![配置Kotlin](http://7xored.com1.z0.glb.clouddn.com/blog_kotlin_configure.png?imageView2/2/w/600/q/100)
 # Kotlin的便利性
 首先最大的便利是语句的结尾不用写分号。刚开始使用时觉得没啥，就是写一个分号的事情，但是用久了回头再写Java的时候，不写分号出现编译错误的时候才会怀念Kotlin。
+## findView
+通常在Android我们需要写一些view的find方法，比如findViewById(...)等，也可以使用ButterKnife等工具来简化这个过程。
+在Kotlin中则更为简便，直接写出View对应的Id即可作为一个View对象使用。
+例如，我们在layout文件中布局一个TextView, 在MainActivity中便可使用sample_text最为变量名来引用这个TextView
+![XML中进行](http://7xored.com1.z0.glb.clouddn.com/blog_kotlin_view_xml.png?imageView2/2/w/600/q/100)
+![Activity中直接引用](http://7xored.com1.z0.glb.clouddn.com/blog_kotlin_view_activity.png?imageView2/2/w/600/q/100)
 ## 扩展方法
 之前项目过程中经常出现各类Utils类，比如StringUtils、DateUtils等，这种情况下刚入手项目的同事可能不清楚该方法的存在，导致同一功能的重复实现。
 而在Kotlin中，可以为已有类拓展方法，结合IDE的代码提示功能，方便找到同事已定义的类拓展方法，避免代码冗余。
@@ -98,6 +104,8 @@ view.setOnClickListener({ ...})
 view.setOnClickListener{ ...}
 ```
 嗯，5行代码的事情一行就能解决，打打提高了效率。
+## 自带封装的方法
+Kotlin自带的一些方法如toast(), arrayOf（）等诸多方法，可省去自己封装的时间。
 # 总结
 Kotlin带来了一种回不去的感觉，再次用Java去写Android程序的时候会有怎么这么啰嗦的感觉。不过Kotlin目前才1.0.2，未来不知道是否会成为主流，在成熟的大项目中使用依然有风险，利弊需要团队自己来权衡。
 

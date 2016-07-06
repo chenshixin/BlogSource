@@ -35,11 +35,11 @@ Android应用可使用内存较少，发生内存泄露的情况使得内存的�
 ## 静态检测
 ### Android Lint
 在开发过程中，Android Studio通常会提示我们可能会引起泄露的问题,比如图中所示的Handler。
-<img src="http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_handler.png" alt="Handler泄露提示" style="width: 400px;" />
+![Handler泄露提示](http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_handler.png?imageView2/2/w/600/q/100))
 ### Insteption
 也可通过Android Studio中的分析工具对整个项目进行静态分析。Analyze - Run Insteption by Name - 输入Memory Issues， 选择需要进行分析的项目进行分析即可。
-<img src="http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_insteption.png" alt="使用AndroidStuido的分析工具" style="width: 400px;" />
-<img src="http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_memory_issues.png" alt="输入Memory Inssues,，选择需要进行分析的项目" style="width: 400px;" />
+![使用AndroidStuido的分析工具](http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_insteption.png?imageView2/2/w/600/q/100))
+![输入Memory Inssues,选择需要进行分析的项目](http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_memory_issues.png?imageView2/2/w/600/q/100))
 ## StrictMode
 StrictMode除了通常使用的检测UI线程中的阻塞性操作外，还能检测内存方面的问题，在发生内存泄露时输出Error的LogCat日志。可以在Application或Activity中进行如下的设置。
 **`注意请不要在线上版本使用，建议设置开关`**
@@ -105,18 +105,18 @@ protected void onCreate(Bundle savedInstanceState) {
 }
 ```
 当StrictMode或LeakCanary提示我们发生内存泄露问题时，我们可以通过Android Studio自带的内存监视工具转存Java堆文件。
-<img src="http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_memory_monitor.png" alt="Android Studio 内存监视工具" style="width: 600px;" />
+![Android Studio 内存监视工具](http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_memory_monitor.png?imageView2/2/w/600/q/100))
 转存成功后可以在Captures中看到堆镜像文件。
-<img src="http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_memory_captures.png" alt="堆文件" style="width: 600px;" />
+![堆文件](http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_memory_captures.png?imageView2/2/w/600/q/100))
 由于Android Studio目前提供的内存分析功能有限，这里我们使用MAT工具进行分析。这里我们需要将文件导出为标准的hprof格式才能被MAT成功分析。
-<img src="http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_memory_export.png" alt="导出hprof" style="width: 400px;" />
+![导出hprof](http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_memory_export.png?imageView2/2/w/600/q/100))
 使用MAT打开导出的内存文件，点击下方的Histogram视图(立方图)，搜索告警中提及到的Activity。这里可以搜索ClassName为包含Activity，Objects个数大于1的，可以直观的罗列存在多个实例的Activity。
-<img src="http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_mat.png" alt="导入hprof文件到MAT" style="width: 400px;" />
-<img src="http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_search.png" alt="找出存在多个实例的Activity类" style="width: 400px;" />
+![导入hprof文件到MAT](http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_mat.png?imageView2/2/w/600/q/100))
+![找出存在多个实例的Activity类](http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_search.png?imageView2/2/w/600/q/100))
 找到疑似存在问题的Activity，我们需要知道是由于什么原因导致其之前的实例没有销毁，这里可以通过 右键类名-Merge Shortest Paths to GC Roots-exclude weak references 找到对GC根的引用。
-<img src="http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_find_path.png" alt="找出对GC根的引用链" style="width: 400px;" />
+![找出对GC根的引用链](http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_find_path.png?imageView2/2/w/600/q/100))
 通过展开可以分析出最终实例未销毁的原因是Activity被callback所引用，它又被Message中一系列的next所引用，最后到主线程才结束。
-<img src="http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_path.png" alt="查看引用链" style="width: 400px;" />
+![查看引用链](http://7xored.com1.z0.glb.clouddn.com/blogandroid_leak_images_path.png?imageView2/2/w/600/q/100))
 
 通过以上方法，可以分析出对象（特别是Activity）未销毁的原因，较为常见的是2中所列原因。为修正此类问题，可以通过避免非静态内部类或者使用弱引用等方式进行改造。
 
